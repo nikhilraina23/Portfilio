@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chede Nikhil — AI & ML Engineer</title>
+<title>Chede Nikhil - AI & ML Engineer</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -40,11 +40,11 @@
     border-bottom: 1px solid var(--border);
   }
   .logo {
-    font-family: 'Space Mono', monospace;
-    font-size: 1.1rem; font-weight: 700;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.3rem; font-weight: 700;
     background: linear-gradient(135deg, var(--primary), var(--accent));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
   }
   .nav-links { display: flex; gap: 2rem; }
   .nav-links a {
@@ -52,6 +52,19 @@
     font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; transition: color 0.2s;
   }
   .nav-links a:hover { color: var(--text); }
+
+  .nav-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    z-index: 101;
+    line-height: 1;
+    transition: transform 0.2s;
+  }
 
   section { position: relative; z-index: 1; }
   .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
@@ -196,6 +209,7 @@
   .exp-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem; }
   .exp-title { font-size: 1.1rem; font-weight: 700; }
   .exp-company { color: var(--primary); font-weight: 600; font-size: 0.9rem; margin-bottom: 0.25rem; }
+  .exp-location { color: var(--muted); font-weight: 500; font-size: 0.85rem; margin-left: 0.25rem; }
   .exp-date {
     font-family: 'Space Mono', monospace; font-size: 0.72rem; color: var(--muted);
     background: rgba(255,255,255,0.05); padding: 0.25rem 0.6rem; border-radius: 5px; white-space: nowrap;
@@ -259,11 +273,140 @@
   .cert-card {
     background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
     padding: 1.5rem; display: flex; gap: 1rem; align-items: flex-start; transition: all 0.2s;
+    cursor: pointer; position: relative; overflow: hidden;
   }
-  .cert-card:hover { border-color: rgba(99,102,241,0.3); transform: translateY(-3px); }
+  .cert-card::after {
+    content: '👁️ View';
+    position: absolute;
+    bottom: 0.75rem;
+    right: 0.75rem;
+    font-size: 0.7rem;
+    color: var(--primary);
+    font-family: 'Space Mono', monospace;
+    opacity: 0;
+    transform: translateY(5px);
+    transition: all 0.2s;
+  }
+  .cert-card:hover::after {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .cert-card:hover { border-color: rgba(99,102,241,0.5); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(99,102,241,0.05); }
   .cert-icon { font-size: 2rem; flex-shrink: 0; }
-  .cert-name { font-weight: 600; margin-bottom: 0.25rem; font-size: 0.95rem; }
+  .cert-name { font-weight: 600; margin-bottom: 0.25rem; font-size: 0.95rem; padding-right: 2rem; }
   .cert-issuer { color: var(--muted); font-size: 0.8rem; }
+
+  /* CERTIFICATE MODAL */
+  .modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .modal.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(4, 8, 18, 0.85);
+    backdrop-filter: blur(10px);
+  }
+  .modal-wrapper {
+    position: relative;
+    z-index: 1001;
+    width: 90%;
+    max-width: 800px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    background: #070d1a;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 50px rgba(99, 102, 241, 0.15);
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
+  }
+  .modal.active .modal-wrapper {
+    transform: scale(1) translateY(0);
+  }
+  .modal-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255,255,255,0.01);
+  }
+  .modal-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .modal-issuer {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 0.2rem;
+  }
+  .modal-close-btn {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-size: 1.8rem;
+    cursor: pointer;
+    line-height: 1;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .modal-close-btn:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .modal-body {
+    padding: 1rem;
+    flex-grow: 1;
+    overflow-y: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 450px;
+    background: #03060c;
+  }
+  .modal-body img {
+    max-width: 100%;
+    max-height: 55vh;
+    object-fit: contain;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  }
+  .modal-body iframe {
+    width: 100%;
+    height: 55vh;
+    border: none;
+    border-radius: 8px;
+    background: #ffffff;
+  }
+  .modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    background: rgba(255,255,255,0.01);
+  }
+
 
   /* EDUCATION */
   #education { padding: 7rem 0; }
@@ -345,12 +488,41 @@
 
   @media (max-width: 768px) {
     .about-grid { grid-template-columns: 1fr; }
+    .about-avatar { max-width: 320px; margin: 0 auto 2rem; }
     .edu-grid { grid-template-columns: 1fr; }
-    .nav-links { display: none; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .leadership-grid { grid-template-columns: 1fr; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .certs-grid { grid-template-columns: 1fr; }
     .timeline::before { left: 14px; }
     .timeline-item { padding-left: 3rem; }
     .timeline-dot { left: 6px; }
     .startup-content { grid-template-columns: 1fr; }
+    
+    .nav-toggle {
+      display: block !important;
+    }
+    .nav-links {
+      position: fixed;
+      top: 3.5rem;
+      left: 0;
+      right: 0;
+      background: rgba(4, 8, 18, 0.96);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      flex-direction: column;
+      padding: 2rem;
+      gap: 1.5rem;
+      align-items: center;
+      transform: translateY(-150%);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 99;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .nav-links.active {
+      transform: translateY(0);
+      display: flex !important;
+    }
   }
 </style>
 </head>
@@ -359,13 +531,14 @@
 <canvas id="canvas"></canvas>
 
 <nav>
-  <div class="logo">CN_</div>
-  <div class="nav-links">
+  <div class="logo">Chede Nikhil</div>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">☰</button>
+  <div class="nav-links" id="nav-links">
     <a href="#about">About</a>
     <a href="#skills">Skills</a>
     <a href="#experience">Experience</a>
     <a href="#leadership">Leadership</a>
-    <a href="#startup">Startup</a>
+    <a href="#startup">My Startup</a>
     <a href="#projects">Projects</a>
     <a href="#contact">Contact</a>
   </div>
@@ -380,17 +553,17 @@
       with <span>AI, Creativity &amp; Innovation</span>
     </h1>
     <p class="hero-sub">
-      I'm Chede Nikhil — an AI &amp; ML undergraduate passionate about Artificial Intelligence, Machine Learning, Generative AI, software development, digital innovation, branding, and community building. I combine technology, creativity, and strategy to build impactful solutions and meaningful digital experiences.
+      I'm Chede Nikhil - an AI &amp; ML undergraduate passionate about Artificial Intelligence, Machine Learning, Generative AI, software development, digital innovation, branding, and community building. I combine technology, creativity, and strategy to build impactful solutions and meaningful digital experiences.
     </p>
     <div class="hero-meta">
       <span>📍 Hyderabad, India</span>
-      <span>🎓 CBIT — AI &amp; ML Engineering</span>
+      <span>🎓 CBIT - AI &amp; ML Engineering</span>
       <span>⚡ SDE Intern @ Chitralai</span>
     </div>
     <div class="hero-ctas">
       <a href="#projects" class="btn btn-primary">View Projects →</a>
       <a href="#contact" class="btn btn-outline">Contact Me</a>
-      <a href="https://github.com/nikhilraina23" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">
+      <a href="https://github.com/nikhilraina23" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
         <svg class="gh-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.929.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
         GitHub
       </a>
@@ -405,13 +578,13 @@
   <div class="container">
     <div class="about-grid reveal">
       <div class="about-avatar">
-        <img src="Picsart_26-06-28_13-02-15-201.jpg.jpeg" alt="Chede Nikhil" style="width:100%;height:100%;object-fit:cover;z-index:1;position:relative;">
+        <img src="my pic.jpeg" alt="Chede Nikhil" style="width:100%;height:100%;object-fit:cover;z-index:1;position:relative;">
         <div style="position:absolute;inset:0;background:radial-gradient(circle at 30% 30%,rgba(99,102,241,0.2),transparent 60%)"></div>
       </div>
       <div class="about-text">
         <h3>Chede Nikhil</h3>
         <div class="about-role">AI Engineer · Founder · Designer · Community Leader</div>
-        <p>I'm an AI &amp; ML undergraduate at CBIT, Hyderabad, with a passion for building intelligent systems that solve real-world problems. From computer vision pipelines to agentic AI frameworks, I turn complex ideas into working products.</p>
+        <p>I'm an Artificial Intelligence &amp; Machine Learning undergraduate at Chaitanya BharathI Institute of Technology, Hyderabad, with a passion for building intelligent systems that solve real-world problems. From computer vision pipelines to agentic AI frameworks, I turn complex ideas into working products.</p>
         <p>Beyond engineering, I lead communities, run a creative agency (Nexire), and design experiences that connect technology with people.</p>
         <div class="about-tags">
           <span class="tag">Artificial Intelligence</span>
@@ -442,25 +615,25 @@
     <div class="edu-grid reveal">
       <div class="edu-card">
         <div class="edu-degree">Bachelor of Engineering</div>
-        <div class="edu-school">Chaitanya Bharathi Institute of Technology</div>
+        <div class="edu-school">Chaitanya Bharathi Institute of Technology, Hyderabad</div>
         <div class="edu-field">Artificial Intelligence &amp; Machine Learning</div>
         <div class="edu-meta">
-          <span class="edu-tag">2024 – 2027</span>
+          <span class="edu-tag">2024 - 2027</span>
           <span class="edu-tag">CGPA: 8.15/10</span>
         </div>
       </div>
       <div class="edu-card">
-        <div class="edu-degree">Diploma — Computer Science</div>
+        <div class="edu-degree">Diploma - Computer Science</div>
         <div class="edu-school">Government Polytechnic College, Nalgonda</div>
         <div class="edu-field">Computer Science Engineering</div>
         <div class="edu-meta">
-          <span class="edu-tag">2021 – 2024</span>
+          <span class="edu-tag">2021 - 2024</span>
           <span class="edu-tag">CGPA: 8.17/10</span>
         </div>
       </div>
       <div class="edu-card">
         <div class="edu-degree">SSC</div>
-        <div class="edu-school">St Anns Medium School, Mothkur</div>
+        <div class="edu-school">St. Ann's English Medium School, Mothkur</div>
         <div class="edu-field">Secondary School Certificate</div>
         <div class="edu-meta">
           <span class="edu-tag">2021</span>
@@ -494,7 +667,7 @@
       </div>
       <div class="skill-card reveal">
         <div class="skill-card-icon">⚡</div>
-        <h4>Frameworks</h4>
+        <h4>AI Frameworks</h4>
         <div class="skill-pills">
           <span class="skill-pill">TensorFlow</span><span class="skill-pill">Keras</span>
           <span class="skill-pill">OpenCV</span><span class="skill-pill">MediaPipe</span>
@@ -506,33 +679,40 @@
         <div class="skill-card-icon">💻</div>
         <h4>Programming</h4>
         <div class="skill-pills">
-          <span class="skill-pill">Python</span><span class="skill-pill">Java</span>
-          <span class="skill-pill">C</span><span class="skill-pill">C++</span><span class="skill-pill">TypeScript</span>
+          <span class="skill-pill">Python</span><span class="skill-pill">C++</span>
+          <span class="skill-pill">TypeScript</span><span class="skill-pill">JavaScript</span>
+          <span class="skill-pill">Java</span><span class="skill-pill">C</span>
         </div>
       </div>
       <div class="skill-card reveal">
         <div class="skill-card-icon">🌐</div>
-        <h4>Development</h4>
+        <h4>Web &amp; Mobile</h4>
         <div class="skill-pills">
-          <span class="skill-pill">Flutter</span><span class="skill-pill">Dart</span>
-          <span class="skill-pill">HTML</span><span class="skill-pill">CSS</span>
-          <span class="skill-pill">JavaScript</span><span class="skill-pill">FastAPI</span>
+          <span class="skill-pill">React</span><span class="skill-pill">Vue.js</span>
+          <span class="skill-pill">Flutter</span><span class="skill-pill">FastAPI</span>
+          <span class="skill-pill">HTML5</span><span class="skill-pill">CSS3</span>
+          <span class="skill-pill">MCP</span>
         </div>
       </div>
       <div class="skill-card reveal">
         <div class="skill-card-icon">🛡️</div>
-        <h4>Cybersecurity</h4>
+        <h4>Cloud &amp; Security</h4>
         <div class="skill-pills">
-          <span class="skill-pill">Vulnerability Assessment</span>
-          <span class="skill-pill">Network Security</span><span class="skill-pill">Threat Detection</span>
+          <span class="skill-pill">Oracle Cloud (OCI)</span>
+          <span class="skill-pill">Cybersecurity</span>
+          <span class="skill-pill">Network Security</span>
+          <span class="skill-pill">Robotic Process Automation (RPA)</span>
+          <span class="skill-pill">Threat Detection</span>
         </div>
       </div>
       <div class="skill-card reveal">
         <div class="skill-card-icon">🔧</div>
-        <h4>Tools</h4>
+        <h4>Marketing &amp; Tools</h4>
         <div class="skill-pills">
+          <span class="skill-pill">Digital Marketing</span><span class="skill-pill">Social Media Marketing</span>
+          <span class="skill-pill">Branding</span><span class="skill-pill">UI/UX Design</span>
           <span class="skill-pill">Git</span><span class="skill-pill">GitHub</span>
-          <span class="skill-pill">VS Code</span><span class="skill-pill">Figma</span>
+          <span class="skill-pill">Figma</span><span class="skill-pill">VS Code</span>
         </div>
       </div>
     </div>
@@ -554,41 +734,56 @@
         <div class="exp-card">
           <div class="exp-header">
             <div><div class="exp-title">Software Development Engineer Intern</div><div class="exp-company">Chitralai</div></div>
-            <span class="exp-date">Jun 2026 – Present</span>
+            <span class="exp-date">Jun 2026 - Present</span>
           </div>
           <ul>
             <li>Developing software solutions and improving application workflows</li>
             <li>Building scalable applications with modern backend architecture</li>
             <li>Testing, debugging, and optimizing application performance</li>
           </ul>
+          <div class="exp-actions" style="margin-top: 1.25rem;">
+            <button class="gh-btn view-cert-btn" data-file="chitralai Nikhil offer letter.jpg" data-type="image" data-name="Software Development Engineer Intern Offer Letter" data-issuer="Chitralai">
+              <span>📄</span> View Offer Letter
+            </button>
+          </div>
         </div>
       </div>
       <div class="timeline-item reveal">
         <div class="timeline-dot"></div>
         <div class="exp-card">
           <div class="exp-header">
-            <div><div class="exp-title">Cyber Security Intern</div><div class="exp-company">Codec Technologies India · Part-time</div></div>
-            <span class="exp-date">Jul 2025 – Nov 2025</span>
+            <div><div class="exp-title">Cyber Security Intern</div><div class="exp-company">Codec Technologies India <span class="exp-location">· Virtual</span></div></div>
+            <span class="exp-date">Jul 2025 - Nov 2025</span>
           </div>
           <ul>
             <li>Performed vulnerability assessments and network security audits</li>
             <li>Implemented threat detection mechanisms and security best practices</li>
             <li>Analyzed attack vectors and produced detailed security reports</li>
           </ul>
+          <div class="exp-actions" style="margin-top: 1.25rem;">
+            <button class="gh-btn view-cert-btn" data-file="codectechnologies.jpeg" data-type="image" data-name="Cyber Security Intern Certificate" data-issuer="Codec Technologies India">
+              <span>📜</span> View Certificate
+            </button>
+          </div>
         </div>
       </div>
       <div class="timeline-item reveal">
         <div class="timeline-dot"></div>
         <div class="exp-card">
           <div class="exp-header">
-            <div><div class="exp-title">Machine Learning Intern</div><div class="exp-company">Intern Certify</div></div>
-            <span class="exp-date">Sep 2024 – Nov 2024</span>
+            <div><div class="exp-title">Machine Learning Intern</div><div class="exp-company">Intern Certify <span class="exp-location">· Virtual</span></div></div>
+            <span class="exp-date">Sep 2024 - Nov 2024</span>
           </div>
           <ul>
             <li>Preprocessed datasets and built ML model evaluation pipelines</li>
             <li>Implemented end-to-end machine learning workflows</li>
             <li>Solved AI-based classification and regression problems</li>
           </ul>
+          <div class="exp-actions" style="margin-top: 1.25rem;">
+            <button class="gh-btn view-cert-btn" data-file="intencertify.jpeg" data-type="image" data-name="Machine Learning Intern Certificate" data-issuer="Intern Certify">
+              <span>📜</span> View Certificate
+            </button>
+          </div>
         </div>
       </div>
       <div class="timeline-item reveal">
@@ -596,13 +791,18 @@
         <div class="exp-card">
           <div class="exp-header">
             <div><div class="exp-title">Internship Trainee</div><div class="exp-company">Pixel Quest</div></div>
-            <span class="exp-date">Dec 2023 – May 2024</span>
+            <span class="exp-date">Dec 2023 - Jun 2024</span>
           </div>
           <ul>
             <li>Developed Smart ATM System using Python and IoT</li>
             <li>Built Smart Agriculture System with sensor-driven automation</li>
             <li>Worked across Python, IoT protocols, and web technologies</li>
           </ul>
+          <div class="exp-actions" style="margin-top: 1.25rem;">
+            <button class="gh-btn view-cert-btn" data-file="pixelquest certificate.jpeg" data-type="image" data-name="Internship Trainee Certificate" data-issuer="Pixel Quest">
+              <span>📜</span> View Certificate
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -622,7 +822,7 @@
       <div class="leader-card reveal">
         <div class="leader-icon">🚀</div>
         <div class="leader-role">Founder</div>
-        <div class="leader-org">Nexire — Creative Agency</div>
+        <div class="leader-org">Nexire - Creative Agency</div>
         <div class="leader-desc">Building a creative marketing agency focused on branding, digital promotions, social media management, and content-driven growth strategies.</div>
         <ul class="leader-list">
           <li>Promotion Strategy</li>
@@ -638,7 +838,7 @@
       <div class="leader-card reveal">
         <div class="leader-icon">🧠</div>
         <div class="leader-role">President</div>
-        <div class="leader-org">Neural Nexus — CBIT</div>
+        <div class="leader-org">Neural Nexus - CBIT</div>
         <div class="leader-desc">Leading a student innovation community focused on Artificial Intelligence, Machine Learning, Data Science, and emerging technologies.</div>
         <ul class="leader-list">
           <li>Organizing AI workshops &amp; initiatives</li>
@@ -655,7 +855,7 @@
         <div class="leader-desc">Bridging students and industry by coordinating placement communications, drives, and industry interactions at the institutional level.</div>
         <ul class="leader-list">
           <li>Placement communication &amp; coordination</li>
-          <li>Student–industry interaction support</li>
+          <li>Student-industry interaction support</li>
           <li>Placement drive management</li>
           <li>Managed SPOC responsibilities for 7+ companies and facilitated smooth placement drive execution</li>
         </ul>
@@ -663,7 +863,7 @@
       <div class="leader-card reveal">
         <div class="leader-icon">🎨</div>
         <div class="leader-role">Head of Design</div>
-        <div class="leader-org">HICON Club — CBIT</div>
+        <div class="leader-org">HICON Club - CBIT</div>
         <div class="leader-desc">Progressive leadership from Junior PR Coordinator → Senior PR Coordinator → Head of Design, driving creative direction for club events.</div>
         <ul class="leader-list">
           <li>Branding &amp; visual identity</li>
@@ -675,7 +875,7 @@
       <div class="leader-card reveal">
         <div class="leader-icon">❤️</div>
         <div class="leader-role">Volunteer</div>
-        <div class="leader-org">NSS — CBIT</div>
+        <div class="leader-org">NSS - CBIT</div>
         <div class="leader-desc">Active volunteer in National Service Scheme, contributing to community service and social welfare initiatives.</div>
         <ul class="leader-list">
           <li>Organised 2 blood donation camps</li>
@@ -694,27 +894,34 @@
 <!-- STARTUP -->
 <section id="startup">
   <div class="container">
-    <div class="startup-header reveal">
-      <div class="startup-logo">NEXIRE</div>
-      <p class="startup-tagline">Your Growth Partner — From Strategy to Execution, We Build Brands That Matter</p>
+    <div class="section-header reveal">
+      <h2 class="section-title">My <span>Startup</span></h2>
+    </div>
+
+    <div class="startup-header reveal" style="margin-top: 2.5rem;">
+      <div class="startup-logo-wrapper" style="margin-bottom: 1rem; display: flex; justify-content: center; align-items: center;">
+        <img src="nexire logo-edited.png" alt="Nexire Logo" style="max-height: 120px; width: auto; object-fit: contain;">
+      </div>
+      <div class="startup-subtitle" style="font-size: 1.1rem; font-weight: 600; color: var(--text); opacity: 0.9; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'Space Mono', monospace;">Creative Marketing Agency</div>
+      <p class="startup-tagline">Fueling Brands in the Digital Age</p>
     </div>
 
     <div class="startup-content reveal">
       <div class="startup-info">
         <div class="founder-header">
           <div class="founder-avatar">
-            <img src="Picsart_26-06-28_13-02-15-201.jpg.jpeg" alt="Chede Nikhil Raina" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+            <img src="my pic.jpeg" alt="Chede Nikhil" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
           </div>
           <div class="founder-details">
-            <h3>Chede Nikhil Raina</h3>
-            <div class="role">Founder</div>
+            <h3>Chede Nikhil</h3>
+            <div class="role">Founder of Nexire</div>
           </div>
         </div>
         <div class="startup-desc">
-          <p>As a founder, I started this journey with a simple vision — to make promotion easy, accessible, and effective for every business. I saw that many businesses struggle to manage different services for design, content, and marketing. So, I wanted to create a place where everything comes together — simple, flexible, and result-driven.</p>
-          <p>We understand that your business is more than just work — it's your effort, your passion, and your dream. That's why we don't just offer services. We focus on helping you grow, reach the right audience, and build a strong presence in the digital world.</p>
+          <p>As a founder, I started this journey with a simple vision - to make promotion easy, accessible, and effective for every business. I saw that many businesses struggle to manage different services for design, content, and marketing. So, I wanted to create a place where everything comes together - simple, flexible, and result-driven.</p>
+          <p>We understand that your business is more than just work - it's your effort, your passion, and your dream. That's why we don't just offer services. We focus on helping you grow, reach the right audience, and build a strong presence in the digital world.</p>
         </div>
-        <div class="startup-quote">"Your growth is not just our goal — it's our responsibility."</div>
+        <div class="startup-quote">"Your growth is not just our goal - it's our responsibility."</div>
       </div>
 
       <div class="startup-services">
@@ -737,14 +944,14 @@
           <div class="service-icon">📱</div>
           <div class="service-text">
             <h4>Social Media Management</h4>
-            <p>Complete social media takeover — from content creation to community building and performance tracking.</p>
+            <p>Complete social media takeover - from content creation to community building and performance tracking.</p>
           </div>
         </div>
         <div class="service-item">
           <div class="service-icon">🎬</div>
           <div class="service-text">
             <h4>Video Production</h4>
-            <p>Cinematic storytelling from script to screen — professional videos that engage, inspire, and convert.</p>
+            <p>Cinematic storytelling from script to screen - professional videos that engage, inspire, and convert.</p>
           </div>
         </div>
         <div class="service-item">
@@ -758,7 +965,7 @@
           <div class="service-icon">🎥</div>
           <div class="service-text">
             <h4>Reel Creation</h4>
-            <p>Viral-worthy short-form content optimized for TikTok, Instagram Reels, and YouTube Shorts — trending and engaging.</p>
+            <p>Viral-worthy short-form content optimized for TikTok, Instagram Reels, and YouTube Shorts - trending and engaging.</p>
           </div>
         </div>
       </div>
@@ -778,7 +985,7 @@
     <div class="section-header reveal">
       <div class="section-eyebrow">Built &amp; Shipped</div>
       <h2 class="section-title">Featured <span>Projects</span></h2>
-      <p class="section-desc">From AI research tools to full-stack platforms — built for real-world impact.</p>
+      <p class="section-desc">From AI research tools to full-stack platforms - built for real-world impact.</p>
     </div>
     <div class="projects-grid" id="projects-grid"></div>
   </div>
@@ -794,25 +1001,67 @@
       <h2 class="section-title">Certifications</h2>
     </div>
     <div class="certs-grid reveal">
-      <div class="cert-card">
+      <div class="cert-card" data-file="Oraclecertificate_page-0001.jpg" data-type="image" data-name="Oracle Cloud Infrastructure 2025 Certified Foundations Associate" data-issuer="Oracle">
         <div class="cert-icon">☁️</div>
         <div>
-          <div class="cert-name">Oracle Cloud Infrastructure 2025</div>
-          <div class="cert-issuer">Oracle · Certified Foundations Associate</div>
+          <div class="cert-name">Oracle Cloud Infrastructure 2025 Certified Foundations Associate</div>
+          <div class="cert-issuer">Oracle</div>
         </div>
       </div>
-      <div class="cert-card">
+      <div class="cert-card" data-file="Ai fundamentals.jpg" data-type="image" data-name="AI Fundamentals: Foundations for Understanding AI" data-issuer="IBM">
         <div class="cert-icon">🤖</div>
         <div>
-          <div class="cert-name">AI Fundamentals</div>
+          <div class="cert-name">AI Fundamentals: Foundations for Understanding AI</div>
           <div class="cert-issuer">IBM</div>
         </div>
       </div>
-      <div class="cert-card">
+      <div class="cert-card" data-file="social media marketing certified.jpg" data-type="image" data-name="HubSpot Social Media Marketing Certification" data-issuer="HubSpot">
+        <div class="cert-icon">📣</div>
+        <div>
+          <div class="cert-name">HubSpot Social Media Marketing Certification</div>
+          <div class="cert-issuer">HubSpot</div>
+        </div>
+      </div>
+      <div class="cert-card" data-file="Digitam marketing certified.jpg" data-type="image" data-name="HubSpot Digital Marketing Certification" data-issuer="HubSpot">
+        <div class="cert-icon">📈</div>
+        <div>
+          <div class="cert-name">HubSpot Digital Marketing Certification</div>
+          <div class="cert-issuer">HubSpot</div>
+        </div>
+      </div>
+      <div class="cert-card" data-file="Introduction_to_Cybersecurity_certificate_page-0001.jpg" data-type="image" data-name="Introduction to Cybersecurity" data-issuer="Cisco">
+        <div class="cert-icon">🔒</div>
+        <div>
+          <div class="cert-name">Introduction to Cybersecurity</div>
+          <div class="cert-issuer">Cisco</div>
+        </div>
+      </div>
+      <div class="cert-card" data-file="Networking_Basics_page-0001.jpg" data-type="image" data-name="Networking Basics" data-issuer="Cisco">
         <div class="cert-icon">🌐</div>
         <div>
           <div class="cert-name">Networking Basics</div>
           <div class="cert-issuer">Cisco</div>
+        </div>
+      </div>
+      <div class="cert-card" data-file="RPA boot camp.jpeg" data-type="image" data-name="Bootcamp on Robotic Process Automation" data-issuer="NIELIT, Aurangabad in association with CBIT, Hyd">
+        <div class="cert-icon">⚙️</div>
+        <div>
+          <div class="cert-name">Bootcamp on Robotic Process Automation</div>
+          <div class="cert-issuer">NIELIT, Aurangabad in association with CBIT, Hyd</div>
+        </div>
+      </div>
+      <div class="cert-card" data-file="value added C++.jpg" data-type="image" data-name="30-hour value added course in C++" data-issuer="CBIT">
+        <div class="cert-icon">💻</div>
+        <div>
+          <div class="cert-name">30-hour value added course in C++</div>
+          <div class="cert-issuer">CBIT</div>
+        </div>
+      </div>
+      <div class="cert-card" data-file="GenAI course.jpg" data-type="image" data-name="AI²: Applied Generative AI for Intelligent Applications" data-issuer="CBIT">
+        <div class="cert-icon">🧠</div>
+        <div>
+          <div class="cert-name">AI²: Applied Generative AI for Intelligent Applications</div>
+          <div class="cert-issuer">CBIT</div>
         </div>
       </div>
     </div>
@@ -827,9 +1076,11 @@
     <div class="contact-wrapper reveal">
       <div class="section-eyebrow">Get In Touch</div>
       <h2 class="section-title" style="text-align:center;">Let's <span>Collaborate</span></h2>
-      <p style="color:var(--muted);margin-top:1rem;line-height:1.8;">Open to internships, full-time roles, research collaborations, and building things together. Reach out — I respond fast.</p>
+      <p style="color:var(--muted);margin-top:1rem;line-height:1.8;">Open to internships, full-time roles, research collaborations, and building things together. Reach out - I respond fast.</p>
+
       <div class="contact-links">
-        <a href="mailto:chedenikhil2@gmail.com" class="btn btn-primary" style="padding: 0.75rem;">✉️</a>
+        <a href="mailto:chedenikhil2@gmail.com" class="btn btn-outline" style="padding: 0.75rem;" title="Email Me">✉️</a>
+        <a href="tel:+916304337657" class="btn btn-outline" style="padding: 0.75rem;" title="Call Me">📞</a>
         <a href="https://github.com/nikhilraina23" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="padding: 0.75rem;">
           <svg class="gh-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.929.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
         </a>
@@ -844,8 +1095,30 @@
   </div>
 </section>
 
+<!-- CERTIFICATE MODAL -->
+<div id="cert-modal" class="modal">
+  <div class="modal-backdrop"></div>
+  <div class="modal-wrapper">
+    <div class="modal-header">
+      <div>
+        <h3 id="modal-cert-name" class="modal-title">Certificate</h3>
+        <p id="modal-cert-issuer" class="modal-issuer">Issuer</p>
+      </div>
+      <button id="modal-close" class="modal-close-btn" aria-label="Close modal">&times;</button>
+    </div>
+    <div id="modal-body-content" class="modal-body">
+      <!-- Dynamic image or iframe will be inserted here -->
+    </div>
+    <div class="modal-footer">
+      <a id="modal-download" href="" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+        <span>🌐</span> Open in New Tab / Download
+      </a>
+    </div>
+  </div>
+</div>
+
 <footer>
-  <p>Built with ❤️ by Chede Nikhil · AI &amp; ML Engineer · Hyderabad, India</p>
+  <p>Designed &amp; Developed by Chede Nikhil · AI &amp; ML Engineer · Hyderabad, India</p>
   <p style="margin-top:0.5rem;opacity:0.5;">© 2026 Chede Nikhil. All rights reserved.</p>
 </footer>
 
@@ -934,6 +1207,34 @@ const projects = [
     technologies: ["JavaScript", "UI/UX", "AI Interface"],
     github: "https://github.com/nikhilraina23/ai-avatar-demo",
     emoji: "🤖"
+  },
+  {
+    title: "Yummy Salad",
+    description: "A highly responsive, vibrant e-commerce landing page for a fruit bowl and healthy dining startup. Implements an interactive menu structure, customizable salad visual constructor, organic recipe showcase, and fluid animations for a seamless user experience.",
+    technologies: ["HTML", "CSS", "JavaScript"],
+    github: "https://github.com/nikhilraina23/yummy_salad",
+    emoji: "🥗"
+  },
+  {
+    title: "CocoaVeda",
+    description: "A premium, visually-rich web platform designed for a craft chocolate cloud kitchen. Features an elegant digital showcase menu for artisanal chocolates, detailed ingredient profiles, custom order reservation forms, and a responsive modular interface.",
+    technologies: ["HTML", "CSS", "JavaScript"],
+    github: "https://github.com/nikhilraina23/cocoaveda",
+    emoji: "🍫"
+  },
+  {
+    title: "FlyStay",
+    description: "FlyStay is a modern travel booking application that lets users search, compare, and book flights and hostels in one place. Built with a responsive UI, secure authentication, real-time availability, advanced search and filtering, booking management, and a seamless user experience for hassle-free travel planning.",
+    technologies: ["React", "HTML", "CSS", "JavaScript"],
+    github: "https://github.com/nikhilraina23/FlyStay",
+    emoji: "✈️"
+  },
+  {
+    title: "Vue Music Store",
+    description: "A responsive Music Store web application built with Vue.js featuring album and artist browsing, category filtering, search, product details, shopping cart, and a seamless checkout experience. Developed with reusable components, dynamic routing, and a modern, user-friendly interface.",
+    technologies: ["Vue.js", "JavaScript", "CSS"],
+    github: "https://github.com/nikhilraina23/vue-music-store",
+    emoji: "🎵"
   }
 ];
 
@@ -1019,6 +1320,96 @@ window.addEventListener('scroll', revealOnScroll, { passive: true });
 
 renderProjects();
 revealOnScroll();
+
+// Certificate/Document Viewer Modal Interaction
+(function() {
+  const modal = document.getElementById('cert-modal');
+  if (!modal) return;
+  
+  const modalBackdrop = modal.querySelector('.modal-backdrop');
+  const modalTitle = document.getElementById('modal-cert-name');
+  const modalIssuer = document.getElementById('modal-cert-issuer');
+  const modalClose = document.getElementById('modal-close');
+  const modalBody = document.getElementById('modal-body-content');
+  const modalDownload = document.getElementById('modal-download');
+
+  // Unified click handler for both cert cards and experience cert/offer letter buttons
+  document.body.addEventListener('click', (e) => {
+    const trigger = e.target.closest('.cert-card, .view-cert-btn');
+    if (!trigger) return;
+
+    e.preventDefault();
+
+    const file = trigger.dataset.file;
+    const type = trigger.dataset.type;
+    const name = trigger.dataset.name;
+    const issuer = trigger.dataset.issuer;
+
+    if (!file) return;
+
+    modalTitle.textContent = name;
+    modalIssuer.textContent = issuer;
+    modalDownload.href = file;
+
+    modalBody.innerHTML = '';
+
+    if (type === 'pdf') {
+      modalBody.innerHTML = `<iframe src="${file}" title="${name}"></iframe>`;
+    } else {
+      modalBody.innerHTML = `<img src="${file}" alt="${name}">`;
+    }
+
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  });
+
+  function closeModal() {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+    setTimeout(() => {
+      modalBody.innerHTML = '';
+    }, 300);
+  }
+
+  if (modalClose) modalClose.addEventListener('click', closeModal);
+  if (modalBackdrop) modalBackdrop.addEventListener('click', closeModal);
+  
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+      closeModal();
+    }
+  });
+})();
+
+// Mobile Navigation Toggle
+(function() {
+  const navToggle = document.getElementById('nav-toggle');
+  const navLinks = document.getElementById('nav-links');
+  if (!navToggle || !navLinks) return;
+
+  navToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    navLinks.classList.toggle('active');
+    navToggle.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
+  });
+
+  // Close menu when clicking a link
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('active');
+      navToggle.textContent = '☰';
+    });
+  });
+
+  // Close menu when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!navLinks.contains(e.target) && !navToggle.contains(e.target)) {
+      navLinks.classList.remove('active');
+      navToggle.textContent = '☰';
+    }
+  });
+})();
 </script>
 </body>
 </html>
+
