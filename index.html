@@ -1356,7 +1356,7 @@ revealOnScroll();
     if (type === 'pdf') {
       modalBody.innerHTML = `<iframe src="${file}" title="${name}"></iframe>`;
     } else {
-      modalBody.innerHTML = `<img src="${file}" alt="${name}">`;
+      modalBody.innerHTML = `<img src="${file}" alt="">`;
     }
 
     modal.classList.add('active');
